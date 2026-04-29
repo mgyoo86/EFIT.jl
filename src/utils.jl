@@ -1,6 +1,6 @@
-using Interpolations: Interpolations
 using PolygonOps: PolygonOps
 using IMASdd: IMASdd
+using FastInterpolations
 
 function triangularity(g::GEQDSKFile)
     Rmin, Rmax = extrema(filter(!iszero,g.rbbbs))
@@ -191,7 +191,7 @@ function x_points(
 
     # For each search center, up sample the local grid to improve accuracy of the
     # final search result and record the X-point positions
-    psi_int = Interpolations.linear_interpolation((r_eq, z_eq), psi_eq)
+    psi_int = linear_interp((r_eq, z_eq), psi_eq; extrap=ExtendExtrap())
     for sc ∈ search_centers
         # Would this way have a significant speed advantage?
         # if PolygonOps.inpolygon([r_eq[sc[1]], z_eq[sc[2]]], wall_poly) != 1
